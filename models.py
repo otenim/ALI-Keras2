@@ -1,0 +1,95 @@
+from keras.models import Model
+from keras.layers import Input
+from keras.layers.core import Dense, Flatten, Reshape, Dropout
+from keras.layers.merge import Concatenate
+from keras.layers.convolutional import Conv2D, Conv2DTranspose
+from keras.layers.advanced_activations import LeakyReLU
+from keras.layers.normalization import BatchNormalization
+
+def create_encoder():
+    input = Input(shape=(32,32,3))
+    x = Conv2D(32, (3,3), strides=(2,2), padding='same')(input)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(64, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(128, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(256, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(512, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(512, (1,1), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(64, (1,1), activation='linear', padding='same')(x)
+    x = Flatten()(x)
+    return Model(input, x, name='encoder')
+
+def create_generater():
+    input = Input(shape=(64,))
+    x = Reshape((1,1,64))(input)
+    x = Conv2DTranspose(256, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2DTranspose(128, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2DTranspose(64, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2DTranspose(32, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2DTranspose(32, (3,3), strides=(2,2), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(32, (1,1), padding='same')(x)
+    x = LeakyReLU(0.1)(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(3, (1,1), padding='same', activation='sigmoid')(x)
+    return Model(input, x, name='generater')
+
+def create_discriminater():
+    input_x = Input(shape=(32,32,3))
+    x = Conv2D(32, (5,5), activation='relu')(input_x)
+    x = Dropout(0.2)(x)
+    x = Conv2D(64, (4,4), strides=(2,2), activation='relu')(x)
+    x = Dropout(0.5)(x)
+    x = Conv2D(128, (4,4), activation='relu')(x)
+    x = Dropout(0.5)(x)
+    x = Conv2D(256, (4,4), strides=(2,2), activation='relu')(x)
+    x = Dropout(0.5)(x)
+    x = Conv2D(512, (4,4), activation='relu')(x)
+
+    input_z = Input(shape=(64,))
+    z = Reshape((1,1,64))(input_z)
+    z = Conv2D(512, (1,1), activation='relu')(z)
+    x = Dropout(0.2)(x)
+    z = Conv2D(512, (1,1), activation='relu')(z)
+    x = Dropout(0.5)(x)
+    concatenated = Concatenate(axis=-1)([x,z])
+
+    c = Conv2D(1024, (1,1), activation='relu')(concatenated)
+    x = Dropout(0.5)(x)
+    c = Conv2D(1024, (1,1), activation='relu')(c)
+    x = Dropout(0.5)(x)
+    c = Conv2D(1, (1,1), activation='sigmoid')(c)
+    x = Dropout(0.5)(x)
+    c = Flatten()(c)
+    return Model([input_x, input_z], c, name='discriminater')
+
+def create_gan(generater, encoder, discriminater):
+    input_x = Input(shape=(32,32,3))
+    input_z = Input(shape=(64,))
+    encoded = encoder(input_x)
+    generated = generater(input_z)
+
+    q = discriminater([input_x, encoded])
+    p = discriminater([generated, input_z])
+    out = Concatenate()([p, q])
+    return Model([input_x, input_z], out, name='gan')
