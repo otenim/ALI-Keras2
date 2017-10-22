@@ -12,51 +12,71 @@ import argparse
 curdir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('--epochs', type=int, default=100)
-parser.add_argument('--batch_size', type=int, default=16)
+parser.add_argument('--batch_size', type=int, default=100)
+parser.add_argument('--lr', type=float, default=1e-4)
+parser.add_argument('--beta_1', type=float, default=0.5)
+parser.add_argument('--beta_2', type=float, default=0.999)
+parser.add_argument('--snap_freq', type=int, default=5)
+parser.add_argument('--result_root', default=os.path.join(curdir, 'results'))
+
+def save_config(path, args):
+    with open(path, 'w') as f:
+        f.write('Epochs: %d\n' % (args.epochs))
+        f.write('Batchsize: %d\n' % (args.batch_size))
+        f.write('Learning rate: %f\n' % (args.lr))
+        f.write('Beta_1: %f\n' % (args.beta_1))
+        f.write('Beta_2: %f\n' % (args.beta_2))
 
 def d_lossfun(y_true, y_pred):
     """
-    y_pred[:,0]: p
-    y_pred[:,1]: q
+    y_pred[:,:,:,0]: p
+    y_pred[:,:,:,1]: q
     """
-    p = K.clip(y_pred[:,0], K.epsilon(), 1.0 - K.epsilon())
-    q = K.clip(y_pred[:,1], K.epsilon(), 1.0 - K.epsilon())
+    p = K.clip(y_pred[:,:,:,0], K.epsilon(), 1.0 - K.epsilon())
+    q = K.clip(y_pred[:,:,:,1], K.epsilon(), 1.0 - K.epsilon())
     return -K.mean(K.log(q) + K.log(1. - p))
 
 def g_lossfun(y_true, y_pred):
     """
-    y_pred[:,0]: p
-    y_pred[:,1]: q
+    y_pred[:,:,:,0]: p
+    y_pred[:,:,:,1]: q
     """
-    p = K.clip(y_pred[:,0], K.epsilon(), 1.0 - K.epsilon())
-    q = K.clip(y_pred[:,1], K.epsilon(), 1.0 - K.epsilon())
+    p = K.clip(y_pred[:,:,:,0], K.epsilon(), 1.0 - K.epsilon())
+    q = K.clip(y_pred[:,:,:,1], K.epsilon(), 1.0 - K.epsilon())
     return -K.mean(K.log(1. - q) + K.log(p))
 
 def main(args):
 
     # =====================================
-    # Load and preprocess dataset
+    # Preparation (load dataset and create
+    # a directory which saves results)
     # =====================================
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     x_train = utils.preprocess_input(x_train)
+    if os.path.exists(args.result_root) == False:
+        os.makedirs(args.result_root)
+    save_config(os.path.join(args.result_root, 'config.txt'), args)
 
     # =====================================
     # Instantiate models
     # =====================================
-    generater = models.create_generater()
-    encoder = models.create_encoder()
-    discriminater = models.create_discriminater()
+    xgen = models.create_xgenerater()
+    zgen = models.create_zgenerater()
+    disc = models.create_discriminater()
+    opt_d = Adam(lr=args.lr, beta_1=args.beta_1, beta_2=args.beta_2)
+    opt_g = Adam(lr=args.lr, beta_1=args.beta_1, beta_2=args.beta_2)
 
-    generater.trainable = False
-    encoder.trainable = False
-    gan_train_d = models.create_gan(generater, encoder, discriminater)
-    gan_train_d.compile(Adam(lr=1e-4, beta_1=0.5, beta_2=1e-3), loss=d_lossfun)
+    xgen.trainable = False
+    zgen.trainable = False
+    gan_d = models.create_gan(xgen, zgen, disc)
+    gan_d.compile(optimizer=opt_d, loss=d_lossfun)
 
-    generater.trainable = True
-    encoder.trainable = True
-    discriminater.trainable = False
-    gan_train_g = models.create_gan(generater, encoder, discriminater)
-    gan_train_g.compile(Adam(lr=1e-4, beta_1=0.5, beta_2=1e-3), loss=g_lossfun)
+    xgen.trainable = True
+    zgen.trainable = True
+    disc.trainable = False
+    gan_g = models.create_gan(xgen, zgen, disc)
+    gan_g.compile(optimizer=opt_g, loss=g_lossfun)
+
 
     # =====================================
     # Training Loop
@@ -67,18 +87,39 @@ def main(args):
         pbar = Progbar(num_train)
         for i in range(0, num_train, args.batch_size):
             x = x_train[i:i+args.batch_size]
-            z = np.random.uniform(0., 1., size=(len(x), 64))
+            z = np.random.normal(size=(len(x), 1, 1, 64))
 
             # train discriminater
-            d_loss = gan_train_d.train_on_batch([x, z], np.zeros((len(x), 2)))
+            d_loss = gan_d.train_on_batch([x, z], np.zeros((len(x), 1, 1, 2)))
             # train generaters
-            g_loss = gan_train_g.train_on_batch([x, z], np.zeros((len(x), 2)))
+            g_loss = gan_g.train_on_batch([x, z], np.zeros((len(x), 1, 1, 2)))
 
             # update progress bar
             pbar.add(len(x), values=[
                 ('d_loss', d_loss),
                 ('g_loss', g_loss),
             ])
+
+        if (epoch+1) % args.snap_freq == 0:
+            # ===========================================
+            # Save result
+            # ===========================================
+            # Make a directory which stores learning results
+            # at each (args.frequency)epochs
+            dirname = 'epochs%d' % (epoch+1)
+            path = os.path.join(args.result_root, dirname)
+            if os.path.exists(path) == False:
+                os.makedirs(path)
+
+            # Save generaters' weights
+            xgen.save_weights(os.path.join(path, 'xgen_weights.h5'))
+            zgen.save_weights(os.path.join(path, 'zgen_weights.h5'))
+
+            # Save generated images
+            img = utils.generate_img(xgen)
+            img.save(os.path.join(path, 'result.png'))
+
+
 
 
 if __name__ == '__main__':
