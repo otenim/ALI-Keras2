@@ -96,14 +96,3 @@ def create_gan(xgenerater, zgenerater, discriminater):
     q = discriminater([input_x, z_gen])
     concatenated = Concatenate(axis=-1)([p,q])
     return Model([input_x, input_z], concatenated, name='gan')
-
-if __name__ == '__main__':
-    zgen = create_zgenerater()
-    xgen = create_xgenerater()
-    disc = create_discriminater()
-    gan = create_gan(xgen, zgen, disc)
-    from keras.utils import plot_model
-    plot_model(zgen, 'zgen.png', show_shapes=True)
-    plot_model(xgen, 'xgen.png', show_shapes=True)
-    plot_model(disc, 'disc.png', show_shapes=True)
-    plot_model(gan, 'gan.png', show_shapes=True)
