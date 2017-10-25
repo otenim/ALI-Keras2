@@ -42,6 +42,10 @@ We use TitanX(pascal architecture)X4 for all experiments.
 
 **epochs315**
 
-![result1](https://i.imgur.com/16buX2d.png)
+![result1](https://i.imgur.com/16buX2d.png)  
 
-We stoppped learning at this epoch not because over fitting or kind of that had occured. So, there is a possibility that higher quality images may be generated with more training or network tunings, I think.
+**epochs875**
+
+![result2](https://i.imgur.com/VDrzbFi.png)  
+
+We stoppped training at this epoch not because over fitting or kind of that had occured. So, there is a possibility that higher quality images may be generated with more training epochs or network tunings, I think.
