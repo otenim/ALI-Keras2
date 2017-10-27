@@ -117,7 +117,11 @@ def main(args):
 
             # Save generated images
             img = utils.generate_img(xgen)
-            img.save(os.path.join(path, 'result.png'))
+            img.save(os.path.join(path, 'generated.png'))
+
+            # Save reconstructed images
+            img = utils.reconstruct_img(x_test, xgen, zgen)
+            img.save(os.path.join(path, 'reconstructed.png'))
 
 
 
