@@ -17,7 +17,7 @@ parser.add_argument('--lr', type=float, default=1e-4)
 parser.add_argument('--beta_1', type=float, default=0.5)
 parser.add_argument('--beta_2', type=float, default=0.999)
 parser.add_argument('--snap_freq', type=int, default=5)
-parser.add_argument('--result_root', default=os.path.join(curdir, 'results'))
+parser.add_argument('--result_root', default=os.path.join(curdir, 'result'))
 
 def save_config(path, args):
     with open(path, 'w') as f:
