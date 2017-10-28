@@ -23,7 +23,7 @@ You can run our training scripts with the following command.
 * `--lr`: learning rate. (NOTE: We use Adam as an optimizer)
 * `--beta_1`: beta1 parameter of Adam
 * `--beta_2`: beta2 parameter of Adam
-* `--snap_freq`: save generaters' weights at each (snap_freq) epochs
+* `--snap_freq`: save generaters' weights at each (snap\_freq) epochs
 * `--result_root`: a path to the directory which saves training results(generater's weights and generated images)
 
 All initial values of above arguments and hyper parameters of network architectures are basically set with reference to ALI's paper.
@@ -40,12 +40,16 @@ We use TitanX(pascal architecture)X4 for all experiments.
 * all images' size are unified into (h,w,c) = (32,32,3)
 * the number of classes is 10(5,000 images for each class)  
 
-**epochs315**
+**epochs315(generate)**
 
 ![result1](https://i.imgur.com/16buX2d.png)  
 
-**epochs875**
+**epochs875(generate)**
 
 ![result2](https://i.imgur.com/VDrzbFi.png)  
+
+**epochs875(reconstruct)**  
+
+![result3](https://i.imgur.com/JILYa9h.png)  
 
 We stoppped training at this epoch not because over fitting or kind of that had occured. So, there is a possibility that higher quality images may be generated with more training epochs or network tunings, I think.
