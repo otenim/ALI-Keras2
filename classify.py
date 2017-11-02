@@ -28,7 +28,7 @@ def main(args):
     # Prepare dataset
     # ===============================
     # make input datasets
-    (x_train, _), (y_train, _) = cifar10.load_data()
+    (x_train, y_train), (_, _) = cifar10.load_data()
     x_train = x_train.astype(np.float32)
     x_train = utils.preprocess_input(x_train)
 
@@ -37,7 +37,7 @@ def main(args):
     x = zgenerater.predict(
         x_train,
         batch_size=args.pred_batch_size,
-        verbose=1)
+        verbose=0)
     x = x.reshape(len(x_train), 64)
 
     # ===============================
@@ -63,7 +63,7 @@ def main(args):
 
     # ===============================
     # Save results
-    # ===============================
+    # =============================== 
     if os.path.exists(args.result_root) == False:
         os.makedirs(args.result_root)
 
@@ -71,6 +71,7 @@ def main(args):
     with open(os.path.join(args.result_root, 'kmeans.pkl'), 'wb') as fp:
         pickle.dump(kmeans, fp)
 
+    # classify images 
     for i in range(num_classes):
         dirname = os.path.join(args.result_root, 'class_%d' % i)
         if os.path.exists(dirname) == False:
@@ -78,9 +79,11 @@ def main(args):
         ind = (kmeans.labels_ == i)
         imgs = x_train[ind]
         labels = y_train[ind]
-        for j in range(len(ind)):
-            img = Image.fromarray(imgs[j])
-            label = classes[labels[j]]
+        for j in range(len(imgs)):
+            img = utils.decode_output(imgs[j])
+            img = img.astype(np.uint8)
+            img = Image.fromarray(img)
+            label = classes[int(labels[j])]
             dst = os.path.join(dirname, '%s_%d.png' % (label, j))
             img.save(dst)
 
