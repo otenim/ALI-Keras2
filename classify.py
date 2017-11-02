@@ -28,17 +28,17 @@ def main(args):
     # Prepare dataset
     # ===============================
     # make input datasets
-    (x_train, y_train), (_, _) = cifar10.load_data()
-    x_train = x_train.astype(np.float32)
-    x_train = utils.preprocess_input(x_train)
+    (_, _), (x_test, y_test) = cifar10.load_data()
+    x_test = x_test.astype(np.float32)
+    x_test = utils.preprocess_input(x_test)
 
     # convert all images into encoded vector points
     print("converting all images into latent z variables..")
     x = zgenerater.predict(
-        x_train,
+        x_test,
         batch_size=args.pred_batch_size,
         verbose=0)
-    x = x.reshape(len(x_train), 64)
+    x = x.reshape(len(x_test), 64)
 
     # ===============================
     # k-means clustering
@@ -63,7 +63,7 @@ def main(args):
 
     # ===============================
     # Save results
-    # =============================== 
+    # ===============================
     if os.path.exists(args.result_root) == False:
         os.makedirs(args.result_root)
 
@@ -77,8 +77,8 @@ def main(args):
         if os.path.exists(dirname) == False:
             os.mkdir(dirname)
         ind = (kmeans.labels_ == i)
-        imgs = x_train[ind]
-        labels = y_train[ind]
+        imgs = x_test[ind]
+        labels = y_test[ind]
         for j in range(len(imgs)):
             img = utils.decode_output(imgs[j])
             img = img.astype(np.uint8)
