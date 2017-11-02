@@ -14,7 +14,7 @@ curdir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('zgenerater_weights')
 parser.add_argument('--use_centroids', type=bool, default=False)
-parser.add_arugment('--imgs_per_centroid', type=int, default=50)
+parser.add_argument('--imgs_per_centroid', type=int, default=50)
 parser.add_argument('--result_root', default=os.path.join(curdir, 'result'))
 parser.add_argument('--pred_batch_size', type=int, default=100)
 
@@ -62,20 +62,20 @@ def main(args):
     # compute centroids
     if args.use_centroids:
         centroids = []
-        for i in range(len(classes)):
-            ind = (y_test == i)
-            sample = (x_test[ind])[:args.imgs_per_centroid]
+        for i in range(num_classes):
+            ind = (y_test == i).reshape(len(y_test))
+            sample = x_test[ind]
+            sample = sample[:args.imgs_per_centroid]
             out = zgenerater.predict_on_batch(sample)
             out = out.reshape(len(sample), out.shape[-1])
             centroid = np.mean(out, axis=0)
             centroids.append(centroid)
         centroids = np.array(centroids)
-        print(centroids.shape)
 
     # clustering
     print("clustering has started...")
     kmeans = KMeans(n_clusters=num_classes)
-    kmeans.fit(x)
+    kmeans.fit(input_data)
 
     # ===============================
     # Save results
