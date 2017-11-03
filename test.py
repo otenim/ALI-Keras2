@@ -2,7 +2,6 @@ import keras
 from keras.datasets import cifar10
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
@@ -72,7 +71,8 @@ def main(args):
         z = compressed_input_data[i*args.samples_per_class : (i+1)*args.samples_per_class, 2]
         ax.plot3D(x, y, z, 'o', label=classes[i])
     ax.legend(loc='best')
-    plt.savefig(os.path.join(curdir, 'test.png'))
+    #plt.savefig(os.path.join(curdir, 'test.png'))
+    plt.show()
 
 if __name__ == '__main__':
     args = parser.parse_args()
