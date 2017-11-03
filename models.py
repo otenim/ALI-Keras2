@@ -27,7 +27,7 @@ def create_xgenerater():
     x = Conv2D(32, (1,1), strides=(1,1))(x)
     x = BatchNormalization()(x)
     x = LeakyReLU(0.2)(x)
-    output = Conv2D(3, (1,1), strides=(1,1), activation='sigmoid')(x)
+    output = Conv2D(3, (1,1), strides=(1,1), activation='tanh')(x)
     return Model(input, output, name='xgenerater')
 
 def create_zgenerater():

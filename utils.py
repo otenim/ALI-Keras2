@@ -3,12 +3,12 @@ from PIL import Image
 
 def preprocess_input(x):
     x = x.astype(np.float32)
-    x /= 255.
+    x = x / 127.5 - 1.
     return x
 
 def decode_output(x):
     x = x.astype(np.float32)
-    x *= 255.
+    x = x * 127.5 + 127.5
     return x
 
 def generate_img(xgenerater):

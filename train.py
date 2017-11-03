@@ -17,7 +17,7 @@ parser.add_argument('--lr', type=float, default=1e-4)
 parser.add_argument('--beta_1', type=float, default=0.5)
 parser.add_argument('--beta_2', type=float, default=0.999)
 parser.add_argument('--snap_freq', type=int, default=5)
-parser.add_argument('--result_root', default=os.path.join(curdir, 'result'))
+parser.add_argument('--result', default=os.path.join(curdir, 'result'))
 
 def save_config(path, args):
     with open(path, 'w') as f:
@@ -53,9 +53,9 @@ def main(args):
     # =====================================
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
     x_train = utils.preprocess_input(x_train)
-    if os.path.exists(args.result_root) == False:
-        os.makedirs(args.result_root)
-    save_config(os.path.join(args.result_root, 'config.txt'), args)
+    if os.path.exists(args.result) == False:
+        os.makedirs(args.result)
+    save_config(os.path.join(args.result, 'config.txt'), args)
 
     # =====================================
     # Instantiate models
@@ -107,7 +107,7 @@ def main(args):
             # Make a directory which stores learning results
             # at each (args.frequency)epochs
             dirname = 'epochs%d' % (epoch+1)
-            path = os.path.join(args.result_root, dirname)
+            path = os.path.join(args.result, dirname)
             if os.path.exists(path) == False:
                 os.makedirs(path)
 
