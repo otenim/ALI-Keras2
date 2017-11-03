@@ -16,7 +16,7 @@ All dependent libraries above can be installed with `pip` command.
 ## Run training scripts
 
 You can run our training scripts with the following command.  
-`$ python train.py [--epochs] [--batch_size] [--lr] [--beta_1] [--beta_2] [--snap_freq] [--result_root]`
+`$ python train.py [--epochs] [--batch_size] [--lr] [--beta_1] [--beta_2] [--snap_freq] [--result]`
 
 * `--epochs`: training epochs
 * `--batch_size`: mini-batchsize while training phase
@@ -24,7 +24,7 @@ You can run our training scripts with the following command.
 * `--beta_1`: beta1 parameter of Adam
 * `--beta_2`: beta2 parameter of Adam
 * `--snap_freq`: save generaters' weights at each (snap\_freq) epochs
-* `--result_root`: a path to the directory which saves training results(generater's weights and generated images)
+* `--result`: a path to the directory which saves training results(generater's weights and generated images)
 
 All initial values of above arguments and hyper parameters of network architectures are basically set with reference to ALI's paper.
 
