@@ -1,7 +1,5 @@
 import keras
 from keras.datasets import cifar10
-from sklearn.cluster import KMeans
-from PIL import Image
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
@@ -10,15 +8,13 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.decomposition import PCA
 import os
 import argparse
-import utils
-import pickle
 import models
-import shutil
+import utils
 
 curdir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
 parser.add_argument('zgenerater_weights')
-parser.add_argument('--samples_per_class', type=int, default=50)
+parser.add_argument('--samples_per_class', type=int, default=20)
 
 def main(args):
 
@@ -64,6 +60,7 @@ def main(args):
     # ===============================
     # Make graph
     # ===============================
+    colorlist = np.random.uniform(size=(num_classes, 3))
     fig = plt.figure()
     ax = Axes3D(fig)
     ax.set_xlabel('x')
@@ -73,9 +70,9 @@ def main(args):
         x = compressed_input_data[i*args.samples_per_class : (i+1)*args.samples_per_class, 0]
         y = compressed_input_data[i*args.samples_per_class : (i+1)*args.samples_per_class, 1]
         z = compressed_input_data[i*args.samples_per_class : (i+1)*args.samples_per_class, 2]
-        ax.scatter3D(x, y, z, marker='o', label=classes[i])
+        ax.plot3D(x, y, z, 'o', label=classes[i])
     ax.legend(loc='best')
-    plt.savefig('test.png')
+    plt.savefig(os.path.join(curdir, 'test.png'))
 
 if __name__ == '__main__':
     args = parser.parse_args()
