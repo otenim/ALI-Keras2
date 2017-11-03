@@ -73,7 +73,7 @@ def main(args):
         x = compressed_input_data[i*args.samples_per_class : (i+1)*args.samples_per_class, 0]
         y = compressed_input_data[i*args.samples_per_class : (i+1)*args.samples_per_class, 1]
         z = compressed_input_data[i*args.samples_per_class : (i+1)*args.samples_per_class, 2]
-        ax.plot(x, y, z, marker='o', label=classes[i])
+        ax.scatter3D(x, y, z, marker='o', label=classes[i])
     ax.legend(loc='best')
     plt.savefig('test.png')
 
