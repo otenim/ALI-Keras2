@@ -12,10 +12,10 @@ import shutil
 
 curdir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
-parser.add_argument('zgenerater_weights')
+parser.add_argument('zgen_weights')
 parser.add_argument('--use_centroids', type=bool, default=False)
 parser.add_argument('--imgs_per_centroid', type=int, default=50)
-parser.add_argument('--result_root', default=os.path.join(curdir, 'result'))
+parser.add_argument('--result', default=os.path.join(curdir, 'result'))
 parser.add_argument('--pred_batch_size', type=int, default=100)
 
 def main(args):
@@ -24,7 +24,7 @@ def main(args):
     # Instantiate zgenerater(encoder)
     # ===============================
     zgenerater = models.create_zgenerater()
-    zgenerater.load_weights(args.zgenerater_weights)
+    zgenerater.load_weights(args.zgen_weights)
 
     # ===============================
     # Prepare dataset

@@ -12,7 +12,7 @@ import utils
 
 curdir = os.path.dirname(os.path.abspath(__file__))
 parser = argparse.ArgumentParser()
-parser.add_argument('zgenerater_weights')
+parser.add_argument('zgen_weights')
 parser.add_argument('--samples_per_class', type=int, default=20)
 
 def main(args):
@@ -21,7 +21,7 @@ def main(args):
     # Instantiate zgenerater(encoder)
     # ===============================
     zgenerater = models.create_zgenerater()
-    zgenerater.load_weights(args.zgenerater_weights)
+    zgenerater.load_weights(args.zgen_weights)
 
     # ===============================
     # Prepare dataset
