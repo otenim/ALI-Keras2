@@ -6,13 +6,12 @@ class ConvMaxout(Layer):
         self.n_piece = n_piece
         super(ConvMaxout, self).__init__(**kwargs)
 
-    def build(self, input_shape):
-        super(ConvMaxout, self).build(input_shape)
-
     def call(self, x):
-        input_shape = x.get_shape().as_list()
-        _, h, w, ch = input_shape
-        x = K.reshape(x, (-1, h, w, ch//self.n_piece, self.n_piece))
+        n = K.shape(x)[0]
+        h = K.shape(x)[1]
+        w = K.shape(x)[2]
+        ch = K.shape(x)[3]
+        x = K.reshape(x, (n, h, w, ch//self.n_piece, self.n_piece))
         x = K.max(x, axis=-1)
         return x
 
