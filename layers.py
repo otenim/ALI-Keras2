@@ -11,9 +11,9 @@ class ConvMaxout(Layer):
 
     def call(self, x):
         input_shape = x.get_shape().as_list()
-        n, h, w, ch = input_shape
-        x = K.reshape(x, (n, h, w, ch//self.n_piece, self.n_piece))
-        x = K.max(x, axis=3)
+        _, h, w, ch = input_shape
+        x = K.reshape(x, (-1, h, w, ch//self.n_piece, self.n_piece))
+        x = K.max(x, axis=-1)
         return x
 
     def compute_output_shape(self, input_shape):
