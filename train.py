@@ -15,7 +15,7 @@ parser.add_argument('--epochs', type=int, default=300)
 parser.add_argument('--batch_size', type=int, default=100)
 parser.add_argument('--lr', type=float, default=1e-4)
 parser.add_argument('--beta_1', type=float, default=0.5)
-parser.add_argument('--beta_2', type=float, default=1e-3)
+parser.add_argument('--beta_2', type=float, default=0.999)
 parser.add_argument('--snap_freq', type=int, default=5)
 parser.add_argument('--result', default=os.path.join(curdir, 'result'))
 
