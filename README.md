@@ -38,6 +38,7 @@ We use TitanX(pascal architecture)X4 for all experiments.
 ### cifar10
 
 * 50,000 training images
+* 10,000 test images are used to generate or reconstruct images.
 * all images' size are unified into (h,w,c) = (32,32,3)
 * the number of classes is 10(5,000 images for each class)  
 
