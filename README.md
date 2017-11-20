@@ -11,7 +11,8 @@ This repository provides an implementation of [Adversarially Learned Inference](
 * numpy==1.12.\*, 1.13.\*
 * Pillow==4.\*
 
-All dependent libraries above can be installed with `pip` command.
+All dependent libraries above can be installed with `pip` command.  
+**Note: We only tested our scripts using Keras with tensorflow batckend.**  
 
 ## Run training scripts
 
