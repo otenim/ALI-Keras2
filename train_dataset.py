@@ -131,7 +131,7 @@ def main(args):
             # Save reconstructed images
             x = utils.make_arrays_from_paths(
                 test_paths,
-                preprocess=utils.preprocess_input,
+                preprocess=None,
                 target_size=(32,32))
             img = utils.reconstruct_img(x, xgen, zgen)
             img.save(os.path.join(path, 'reconstructed.png'))
