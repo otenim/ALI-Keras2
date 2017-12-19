@@ -1,6 +1,7 @@
 import numpy as np
 import os
 from PIL import Image
+from keras.preprocessing import image
 
 def preprocess_input(x):
     x = x.astype(np.float32)
