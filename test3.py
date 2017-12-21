@@ -2,7 +2,6 @@ import models
 import utils
 import argparse
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn import decomposition
@@ -57,9 +56,9 @@ def main(args):
     ax.set_ylabel('y')
     ax.set_zlabel('z')
 
-    ax.plot(z_normal[:,0],z_normal[:,1],z_normal[:,2],color='blue',label='normal')
-    ax.plot(z_anomal[:,0],z_anomal[:,1],z_anomal[:,2],color='red',label='anomal')
-    ax.plot(z_cifar[:,0],z_cifar[:,1],z_cifar[:,2],color='yellow',label='cifar10')
+    ax.scatter(z_normal[:,0],z_normal[:,1],z_normal[:,2],color='blue',label='normal')
+    ax.scatter(z_anomal[:,0],z_anomal[:,1],z_anomal[:,2],color='red',label='anomal')
+    ax.scatter(z_cifar[:,0],z_cifar[:,1],z_cifar[:,2],color='orange',label='cifar10')
 
     plt.legend(loc='best')
     plt.savefig('out3.png')
