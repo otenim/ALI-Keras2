@@ -49,14 +49,15 @@ def main(args):
     ax.scatter(
         x_transformed[:len(x_normal),0],
         x_transformed[:len(x_normal),1],
-        c='blue')
+        c='blue',label='normal')
     ax.scatter(
         x_transformed[len(x_normal):,0],
         x_transformed[len(x_normal):,1],
-        c='red')
+        c='red',label='anomaly')
     ax.set_xlabel('x')
     ax.set_ylabel('y')
-    plt.savefig('out.png')
+    plt.legend(loc='best')
+    plt.savefig('out1.png')
 
 
 if __name__ == '__main__':

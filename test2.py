@@ -52,18 +52,18 @@ def main(args):
     ax.scatter(
         x_transformed[:len(x_normal),0],
         x_transformed[:len(x_normal),1],
-        c='blue')
+        c='blue',label='normal')
     ax.scatter(
         x_transformed[len(x_normal):len(x_normal)+len(x_anomal),0],
         x_transformed[len(x_normal):len(x_normal)+len(x_anomal),1],
-        c='red')
+        c='red',label='anomaly')
     ax.scatter(
         x_transformed[len(x_normal)+len(x_anomal):,0],
         x_transformed[len(x_normal)+len(x_anomal):,1],
-        c='yellow')
+        c='yellow',label='cifar10')
     ax.set_xlabel('x')
     ax.set_ylabel('y')
-    plt.savefig('out.png')
+    plt.savefig('out2.png')
 
 
 if __name__ == '__main__':
