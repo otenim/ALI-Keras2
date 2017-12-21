@@ -63,6 +63,7 @@ def main(args):
         c='yellow',label='cifar10')
     ax.set_xlabel('x')
     ax.set_ylabel('y')
+    plt.legend(loc='best')
     plt.savefig('out2.png')
 
 
