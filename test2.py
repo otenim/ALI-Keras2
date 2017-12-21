@@ -36,7 +36,7 @@ def main(args):
         preprocess=utils.preprocess_input,
         target_size=(input_h,input_w))
     (x_cifar,_),(_,_) = cifar10.load_data()
-    x_cifar = x_cifar[:100]
+    x_cifar = utils.preprocess_input(x_cifar[:100])
     x_input = np.concatenate((x_normal,x_anomal,x_cifar),axis=0)
 
     # ================================
