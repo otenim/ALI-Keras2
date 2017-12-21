@@ -5,6 +5,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from sklearn import decomposition
+import numpy as np
+
 parser = argparse.ArgumentParser()
 parser.add_argument('weights')
 parser.add_argument('normal')
@@ -41,8 +43,20 @@ def main(args):
     preds = preds.reshape(len(preds),preds.shape[-1])
     pca = decomposition.PCA(n_components=2)
     x_transformed = pca.fit_transform(preds)
-    print(x_transformed.shape)
 
+    fig = plt.figure()
+    ax = fig.add_subplot(1,1,1)
+    ax.scatter(
+        x_transformed[:len(x_normal),0],
+        x_transformed[:len(x_normal),1],
+        c='blue')
+    ax.scatter(
+        x_transformed[len(x_normal):,0],
+        x_transformed[len(x_normal):,1],
+        c='red')
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    plt.savefig('out.png')
 
 
 if __name__ == '__main__':
