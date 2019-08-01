@@ -11,36 +11,36 @@ This repository provides an implementation of [Adversarially Learned Inference](
 * numpy==1.12.\*, 1.13.\*
 * Pillow==4.\*
 
-All dependent libraries above can be installed with `pip` command.  
-**Note: We only tested our scripts using Keras with tensorflow batckend.**  
+All dependent libraries can be installed with `pip` command.  
+**Note: We only tested our scripts using Keras with tensorflow backend.**  
 
 ## Run training scripts
 
 You can run our training scripts with the following command.  
 `$ python train.py [--epochs] [--batch_size] [--lr] [--beta_1] [--beta_2] [--snap_freq] [--result]`
 
-* `--epochs`: training epochs
-* `--batch_size`: mini-batchsize while training phase
-* `--lr`: learning rate. (NOTE: We use Adam as an optimizer)
-* `--beta_1`: beta1 parameter of Adam
-* `--beta_2`: beta2 parameter of Adam
-* `--snap_freq`: save generaters' weights at each (snap\_freq) epochs
-* `--result`: a path to the directory which saves training results(generater's weights and generated images)
-
-All initial values of above arguments and hyper parameters of network architectures are basically set with reference to ALI's paper.
+* `--epochs`: training epochs.
+* `--batch_size`: batch size during the training phase.
+* `--lr`: learning rate (we use Adam as the optimizer).
+* `--beta_1`: beta\_1 parameter of Adam.
+* `--beta_2`: beta\_2 parameter of Adam.
+* `--snap_freq`: save generaters' weights at each (snap\_freq) epochs.
+* `--result`: a path to the directory where training results (generater's weights and generated images) are to be saved.
 
 ex) `$ python train.py --epochs 500 --batch_size 100`
 
+All the default values of the above arguments and hyper parameters of the network architecture are basically the same values which are used in the original paper.  
+
 ## Experiment results
 
-We use TitanX(pascal architecture)X4 for all experiments.
+We used Titan X (pascal architecture) X 4 for all the experiments.
 
 ### cifar10
 
-* 50,000 training images
+* 50,000 training images.
 * 10,000 test images are used to generate or reconstruct images.
-* all images' size are unified into (h,w,c) = (32,32,3)
-* the number of classes is 10(5,000 images for each class)  
+* All the images' shapes are unified into (h, w, c) = (32, 32, 3).
+* The number of classes is 10 (5,000 images for each class).
 
 **epochs875(generate)**
 
@@ -66,4 +66,3 @@ We use TitanX(pascal architecture)X4 for all experiments.
 
 ![result6](https://i.imgur.com/bjRhI0s.png)
 
-We stoppped training at this epoch not because over fitting or kind of that had occured. So, there is a possibility that higher quality images may be generated with more training epochs or network tunings, I think.
